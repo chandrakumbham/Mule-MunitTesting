@@ -267,4 +267,30 @@
             <munit-tools:assert-that expression="#[%dw 2.0 output application/json ---payload]" is='#[MunitTools::equalTo(readUrl("classpath://scaffolder/response/put_NOT_FOUND_404.json", "application/json"))]' message="The response payload is not correct!" doc:name="Assert That - Payload is Expected [Resource not found]" doc:id="db5e866a-6de5-45ac-9ce6-1d41eaa80745"/>
         </munit:validation>
     </munit:test>
+    
+     <munit:test name="delete:\apikit-delete:munit-for-apikit-flow-part2-mule4-config-200-application\json-FlowTest_notimplemented" description="Verifying functionality of [delete:\apikit-delete:munit-for-apikit-flow-part2-mule4-config-200-application\json]">
+        <munit:enable-flow-sources>
+			<munit:enable-flow-source value="munit-for-apikit-flow-part2-mule4-main" />
+           <!--  <munit:enable-flow-source value="delete:\apikit-delete1:munit-for-apikit-flow-part2-mule4-config" /> -->
+        </munit:enable-flow-sources>
+        <munit:behavior >
+			<set-payload value='#[message: "Not Implemented"]' doc:name="Set Payload" doc:id="71606403-4ab1-413e-816c-50c4396ac366" />
+		</munit:behavior>
+		<munit:execution>
+            <http:request config-ref="HTTP_Request_Configuration" method="DELETE" path="/apikit-delete1" doc:name="apikit-delete">
+                <http:headers><![CDATA[#[{"Accept":"application/json"}]]]></http:headers>
+                <http:query-params><![CDATA[#[output application/java
+---
+{
+	"Id" : "9"
+}]]]></http:query-params>
+				<http:response-validator >
+					<http:success-status-code-validator values="501" />
+				</http:response-validator>
+            </http:request>
+        </munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="b58ada08-4f05-4e69-8935-100083f5835d" expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(501)]" message='#[attributes.statusCode]'/>
+		</munit:validation>
+    </munit:test>
 </mule>
